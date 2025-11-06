@@ -83,6 +83,41 @@ This repo is a Playwright + TypeScript test project structured around Page Objec
 - Use unique timestamped data (`Date.now()`) to avoid conflicts.
 - Prefer boolean check methods (`isSuccessfullySubmitted()`) over direct element visibility checks.
 
+### example:
+For Signup:
+```ts
+test.describe("User Signup Flow", () => {
+  test("should successfully signup a new user with valid data", async ({
+    signupPage,
+    accountPage,
+  }) => {
+    // Generate unique test data to avoid duplicate email issues
+    const timestamp = Date.now();
+    const testUser: SignupData = {
+      name: "Test User",
+      email: `testuser_${timestamp}@example.com`,
+      password: "TestPassword123!",
+      confirmPassword: "TestPassword123!",
+    };
+
+    // Arrange: Navigate to signup page
+    await signupPage.goto();
+
+    // Act: Fill out the signup form
+    await signupPage.fillSignupForm(testUser);
+
+    // Submit the form
+    await signupPage.submitForm();
+
+    // Assert: Verify successful signup and account page content
+    expect(await accountPage.isOnAccountPage()).toBeTruthy();
+
+    // Verify user information is displayed correctly on account page
+    expect(await accountPage.getProfileFullName()).toBe(testUser.name);
+    expect(await accountPage.getProfileEmail()).toBe(testUser.email);
+  });
+```
+
 ## Developer workflows
 - Install deps: `npm ci`
 - Install browsers (first run or CI): `npx playwright install --with-deps`
