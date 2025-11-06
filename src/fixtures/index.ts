@@ -5,11 +5,13 @@
 
 import { test as base, Page } from "@playwright/test";
 import { SamplePage } from "../pages/SamplePage";
+import { SignupPage } from "../pages/SignupPage";
 import { UserCredentials } from "../types";
 
 // Define fixture types
 export interface PageFixtures {
   samplePage: SamplePage;
+  signupPage: SignupPage;
 }
 
 // Combine all fixtures
@@ -20,11 +22,19 @@ export type TestFixtures = PageFixtures;
  */
 export const test = base.extend<TestFixtures>({
   /**
-   * Login Page fixture
+   * Sample Page fixture
    */
   samplePage: async ({ page }, use) => {
-    const loginPage = new SamplePage(page);
-    await use(loginPage);
+    const samplePage = new SamplePage(page);
+    await use(samplePage);
+  },
+
+  /**
+   * Signup Page fixture
+   */
+  signupPage: async ({ page }, use) => {
+    const signupPage = new SignupPage(page);
+    await use(signupPage);
   },
 });
 
